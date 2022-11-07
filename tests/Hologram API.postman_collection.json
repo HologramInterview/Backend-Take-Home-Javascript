@@ -1,0 +1,333 @@
+{
+	"info": {
+		"_postman_id": "e734f962-2a8f-4d81-a55b-bd3fac19c31f",
+		"name": "Hologram API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23163740"
+	},
+	"item": [
+		{
+			"name": "parse with Valid Basic Input",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Parse with a valid input should succeed\", function () {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson).to.be.an(\"object\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:4321/parse?input={{validBasicData}}",
+					"host": [
+						"localhost"
+					],
+					"port": "4321",
+					"path": [
+						"parse"
+					],
+					"query": [
+						{
+							"key": "input",
+							"value": "{{validBasicData}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "bulk-parse with ALL Valid Basic Input",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Bulk Parse with ALL valid inputs should succeed\", function () {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"    const responseJson = pm.response.json();",
+							"    responseJson.forEach(v => {",
+							"         pm.expect(v).to.be.an(\"object\");",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{listOfAllValidLines}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:4321/bulk-parse",
+					"host": [
+						"localhost"
+					],
+					"port": "4321",
+					"path": [
+						"bulk-parse"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "bulk-parse with SOME Invalid Lines",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Bulk Parse with SOME Invalid inputs should fail\", function () {",
+							"    pm.expect(pm.response.code).to.eql(404);",
+							"    const responseJson = pm.response.json();",
+							"    responseJson.forEach(v => {",
+							"         pm.expect(v).to.be.an(\"object\");",
+							"    });",
+							"    pm.expect(responseJson.filter(v => v.error).length).to.eql(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{listOfInvalidAndValidLines}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:4321/bulk-parse",
+					"host": [
+						"localhost"
+					],
+					"port": "4321",
+					"path": [
+						"bulk-parse"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "bulk-parse with ALL Invalid Lines",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Bulk Parse with ALL Invalid inputs should fail\", function () {",
+							"    pm.expect(pm.response.code).to.eql(404);",
+							"    const responseJson = pm.response.json();",
+							"    responseJson.forEach(v => {",
+							"         pm.expect(v).to.be.an(\"object\");",
+							"    });",
+							"    pm.expect(responseJson.filter(v => v.error).length).to.eql(responseJson.length);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{listOfAllInvalidLines}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:4321/bulk-parse",
+					"host": [
+						"localhost"
+					],
+					"port": "4321",
+					"path": [
+						"bulk-parse"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "parse with Invalid ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Parse with an invalid input should NOT succeed\", function () {",
+							"    pm.expect(pm.response.code).to.eql(404);",
+							"    const responseJson = pm.response.json();",
+							"    pm.expect(responseJson).to.be.an(\"object\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:4321/parse?input={{inValidBasicData}}",
+					"host": [
+						"localhost"
+					],
+					"port": "4321",
+					"path": [
+						"parse"
+					],
+					"query": [
+						{
+							"key": "input",
+							"value": "{{inValidBasicData}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"const validHex6 = '316,0e893279227712cac0014aff';",
+					"pm.globals.set(\"validHex6\", validHex6);",
+					"const inValidHexData6 = '6,foo';",
+					"pm.globals.set(\"inValidHexData6\", inValidHexData6);",
+					"",
+					"const validExtendedData4 = '7194,b33,394,495593,192';",
+					"pm.globals.set(\"validExtendedData4\", validExtendedData4);",
+					"const inValidExtendedData4 = '4,foo,bar';",
+					"pm.globals.set(\"inValidExtendedData4\", inValidExtendedData4);",
+					"",
+					"const validBasicData = '7291,293451';",
+					"pm.globals.set(\"validBasicData\", validBasicData);",
+					"const inValidBasicData = 'foo,bar';",
+					"pm.globals.set(\"inValidBasicData\", inValidBasicData);",
+					"",
+					"const listOfAllValidLines = JSON.stringify([",
+					"    validHex6,",
+					"    validExtendedData4,",
+					"    validBasicData",
+					"]);",
+					"pm.globals.set(\"listOfAllValidLines\", listOfAllValidLines);",
+					"",
+					"const listOfAllInvalidLines = JSON.stringify([",
+					"    inValidBasicData,",
+					"    inValidExtendedData4,",
+					"    inValidHexData6,",
+					"]);",
+					"pm.globals.set(\"listOfAllInvalidLines\", listOfAllInvalidLines);",
+					"",
+					"const listOfInvalidAndValidLines = JSON.stringify([",
+					"    validHex6,",
+					"    validExtendedData4,",
+					"    inValidBasicData,",
+					"    validBasicData,",
+					"]);",
+					"pm.globals.set(\"listOfInvalidAndValidLines\", listOfInvalidAndValidLines);",
+					"      ",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

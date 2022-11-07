@@ -5,11 +5,17 @@
   "main": "usage_parser.js",
   "type": "module",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest"
   },
   "author": "Hologram, Inc.",
   "devDependencies": {
     "@jest/globals": "^28.1.3",
     "jest": "^28.1.3"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^2.0.20"
   }
 }
