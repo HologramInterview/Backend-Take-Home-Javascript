@@ -12,11 +12,11 @@ class ParsedOutput {
     cellid = null;
 
     /**
-     * Constructor receives a literal object with values for a subset of the classe's properties.
+     * Constructor receives a literal object with values for a subset of the class's properties.
      *      let po = new ParsedOutput({id:6, bytes_used:123456});
      * All properties and values of obj, will get assigned to the respective instance's properties. 
      * Properties not in obj will be left with their existing values.
-     * If obj has properties not in the class, they will be addedd to the instance (no biggie, no need to add any)
+     * If obj has properties not in the class, they will be added to the instance (no biggie, no need to add any)
      * it's assumed all values inside obj have been parsed already.
      *
      * @param {*} obj
@@ -29,7 +29,7 @@ class ParsedOutput {
      * @param {*} obj
      * @returns ParsedOutput
      */
-    addToParsedOutput(obj) {
+    async addToParsedOutput(obj) {
         if (obj) {
             Object.assign(this, obj);            
         }
@@ -40,10 +40,11 @@ class ParsedOutput {
      *
      * @returns string
      */
-    getLastDigitFromId() {
+     getLastDigitFromId() {
         const idStr = this.id.toString();
         return idStr.charAt(idStr.length - 1);
     }
+
 }
 
 export default ParsedOutput;

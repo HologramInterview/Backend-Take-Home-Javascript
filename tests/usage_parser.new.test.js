@@ -10,8 +10,8 @@ describe("UsageParser", () => {
             beforeEach(() => {
                 input = "7291,293451";
             });
-            it("Returns an array with one parsed result", () => {
-                const result = UsageParser.parse(input);
+            it("Returns an array with one parsed result", async () => {
+                const result = await UsageParser.parse(input);
                 expect(result).not.toBeUndefined();
                 expect(result).toBeInstanceOf(Array);
                 expect(result).toHaveLength(1);
@@ -25,8 +25,8 @@ describe("UsageParser", () => {
                 input = "";
             });
 
-            it("Should return an internal exception and result in an empty ParsedOutput", () => {
-                const result = UsageParser.parse(input);
+            it("Should return an internal exception and result in an empty ParsedOutput", async () => {
+                let result = await UsageParser.parse(input);
                 expect(result).toBeInstanceOf(Array);
                 expect(result).toHaveLength(1);
                 expect(result.pop()).toEqual(new ParsedOutput());
@@ -45,8 +45,8 @@ describe("UsageParser", () => {
                 ];
             });
 
-            it("Should return an array with every valid input parsed. The last invalid input should be an empty ParsedOut.", () => {
-                const result = UsageParser.parse(input);
+            it("Should return an array with every valid input parsed. The last invalid input should be an empty ParsedOut.", async () => {
+                const result = await UsageParser.parse(input);
                 expect(result).not.toBeUndefined();
                 expect(result).toBeInstanceOf(Array);
                 expect(result).toHaveLength(input.length);
@@ -68,14 +68,14 @@ describe("UsageParser", () => {
                 usageParser = UsageParser.getInstance(input);
             });
 
-            it("Should call getLastDigitFromId() once", () => {
+            it("Should call getLastDigitFromId() once", async () => {
                 const spy = jest.spyOn(usageParser, "getLastDigitFromId");
-                usageParser.parseLine();
+                await usageParser.parseLine();
                 expect(spy).toHaveBeenCalledTimes(1);
             });
 
-            it("Makes sure the returned instance is of the proper type, and the id has been extracted from the input.", () => {
-                const result = usageParser.parseLine();
+            it("Makes sure the returned instance is of the proper type, and the id has been extracted from the input.", async () => {
+                const result = await usageParser.parseLine();
                 expect(result).not.toBeUndefined();
                 expect(result).toBeInstanceOf(ParsedOutput);
                 expect(result.id).toBe(id);
@@ -91,9 +91,9 @@ describe("UsageParser", () => {
                 usageParser = UsageParser.getInstance(input);
             });
 
-            it("Will call parseBasicData()", () => {
+            it("Will call parseBasicData()", async () => {
                 const spy = jest.spyOn(usageParser, "parseBasicData");
-                usageParser.parseLine(input);
+                await usageParser.parseLine(input);
                 expect(spy).toHaveBeenCalledTimes(1);
             });
         });
@@ -106,9 +106,9 @@ describe("UsageParser", () => {
                 input = "7294,bar";
                 usageParser = UsageParser.getInstance(input);
             });
-            it("Will call parseExtendedData", () => {
+            it("Will call parseExtendedData", async () => {
                 const spy = jest.spyOn(usageParser, "parseExtendedData");
-                usageParser.parseLine(input);
+                await usageParser.parseLine(input);
                 expect(spy).toHaveBeenCalledTimes(1);
             });
         });
@@ -121,9 +121,9 @@ describe("UsageParser", () => {
                 input = "7296,bar";
                 usageParser = UsageParser.getInstance(input);
             });
-            it("Will call parseHexData", () => {
+            it("Will call parseHexData", async () => {
                 const spy = jest.spyOn(usageParser, "parseHexData");
-                usageParser.parseLine(input);
+                await usageParser.parseLine(input);
                 expect(spy).toHaveBeenCalledTimes(1);
             });
         });
@@ -147,8 +147,8 @@ describe("UsageParser", () => {
             };
         });
 
-        it("Returns object with 'id' and 'bytes_used'. All other fields are 'null'", () => {
-            const result = usageParser.parseBasicData();
+        it("Returns object with 'id' and 'bytes_used'. All other fields are 'null'", async () => {
+            const result = await usageParser.parseBasicData();
             expect(result).not.toBeUndefined();
             expect(result).toBeInstanceOf(ParsedOutput);
             expect(result).toEqual(expected); // checks both values and nulls
@@ -159,6 +159,7 @@ describe("UsageParser", () => {
         let input;
         let usageParser;
         let expected;
+        let result;
 
         beforeEach(() => {
             input = "7194,b33,394,495593,192";
@@ -173,8 +174,8 @@ describe("UsageParser", () => {
             };
         });
 
-        it("Returns object with 'id', 'bytes_used', 'mnc', 'dmcc' and 'cellid'. All other fields are 'null'", () => {
-            const result = usageParser.parseExtendedData();
+        it("Returns object with 'id', 'bytes_used', 'mnc', 'dmcc' and 'cellid'. All other fields are 'null'", async () => {
+            result = await usageParser.parseExtendedData();
             expect(result).not.toBeUndefined();
             expect(result).toBeInstanceOf(ParsedOutput);
             expect(result).toEqual(expected); // checks both values and nulls
@@ -206,8 +207,8 @@ describe("UsageParser", () => {
             };
         });
 
-        it("Returns object with id, bytes_used, mnc, cellid and ip. All other fields are null", () => {
-            const result = usageParser.parseHexData();
+        it("Returns object with id, bytes_used, mnc, cellid and ip. All other fields are null", async () => {
+            const result = await usageParser.parseHexData();
             expect(result).not.toBeUndefined();
             expect(result).toBeInstanceOf(ParsedOutput);
             expect(result).toEqual(expected); // checks both values and nulls

@@ -102,12 +102,12 @@ describe("ParsedOutput", () => {
             parsedOutput = new ParsedOutput();
 
         });
-        it("Adds or replaces inside the instance all the keys and values from input", () => {
-            const result = parsedOutput.addToParsedOutput(input);
+        it("Adds or replaces inside the instance all the keys and values from input", async () => {
+            const result = await parsedOutput.addToParsedOutput(input);
             expect(result).not.toBeUndefined();
             expect(result).toBeInstanceOf(ParsedOutput);
             expect(result).toEqual(expected);
-            const result2 = parsedOutput.addToParsedOutput(input2);
+            const result2 = await parsedOutput.addToParsedOutput(input2);
             expect(result2.foo).toEqual(input2.foo);
             expect(result2.bar).toEqual(input2.bar);
         });
@@ -121,8 +121,8 @@ describe("ParsedOutput", () => {
             parsedOutput = new ParsedOutput();
         });
 
-        it("returns the last digit from the instance's id", () => {
-            const result = parsedOutput.addToParsedOutput({id:576});
+        it("returns the last digit from the instance's id", async () => {
+            const result = await parsedOutput.addToParsedOutput({id:576});
             expect(result).not.toBeUndefined();
             expect(result).toBeInstanceOf(ParsedOutput);
             expect(result.getLastDigitFromId()).toEqual("6");

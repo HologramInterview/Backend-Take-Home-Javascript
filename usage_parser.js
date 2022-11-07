@@ -57,7 +57,7 @@ class UsageParser {
         ].join(".");
     }
 
-    static convertToInt(value, radix=10) {
+    static convertToInt(value, radix = 10) {
         let parsedValue = parseInt(value, radix);
         return !isNaN(parsedValue) ? parsedValue : null;
     }
@@ -72,8 +72,8 @@ class UsageParser {
      *
      * @returns ParsedOutput
      */
-    parseBasicData() {
-        return this.parsedOutput.addToParsedOutput({
+    async parseBasicData() {
+        return await this.parsedOutput.addToParsedOutput({
             bytes_used: UsageParser.convertToInt(this.rawValue),
         });
     }
@@ -86,13 +86,13 @@ class UsageParser {
      *
      * @returns ParsedOutput
      */
-    parseExtendedData() {
+    async parseExtendedData() {
         const regexExtendedData = /^(.*?),?(\d*),?(\d*),?(\d*)$/;
         const matchResult = this.rawValue.match(regexExtendedData);
         if (!matchResult) {
             throw `Invalid input. Unable to match the ExtendedData pattern to the value=${this.rawValue}`;
         }
-        return this.parsedOutput.addToParsedOutput({
+        return await this.parsedOutput.addToParsedOutput({
             dmcc: matchResult[1],
             mnc: UsageParser.convertToInt(matchResult[2]),
             bytes_used: UsageParser.convertToInt(matchResult[3]),
@@ -120,8 +120,8 @@ class UsageParser {
      *
      * @returns ParsedOutput
      */
-    parseHexData() {
-        return this.parsedOutput.addToParsedOutput({
+    async parseHexData() {
+        return await this.parsedOutput.addToParsedOutput({
             mnc: UsageParser.convertToIntFromHex(this.rawValue.substring(0, 4)),
             bytes_used: UsageParser.convertToIntFromHex(this.rawValue.substring(4, 8)),
             cellid: UsageParser.convertToIntFromHex(this.rawValue.substring(8, 16)),
@@ -138,26 +138,27 @@ class UsageParser {
      *
      * @returns ParsedOutput
      */
-    parseLine() {
+    async parseLine() {
         switch (this.getLastDigitFromId()) {
             case "4":
-                return this.parseExtendedData();
+                return await this.parseExtendedData();
             case "6":
-                return this.parseHexData();
+                return await this.parseHexData();
             default:
-                return this.parseBasicData();
+                return await this.parseBasicData();
         }
     }
 
     /**
-     * The `parse` method should accept a usage string or an array of strings.
-     * It should perform the parsing of each string and return an 
-     * array of ParsedOutput objects containing the id and all the parsed values.
+     * The `parse` method accepts a usage string or an array of usage strings.
+     * It parses each usage string and returns an array of corresponding ParsedOutput objects.
+     * When the parsing of usage strings fails, the corresponding ParsedOutput object contains 
+     * information related to the error.
      *
      * @param {*} input
      * @returns array
      */
-    static parse(input) {
+    static async parse(input) {
         if (!Array.isArray(input)) {
             input = [input];
         }
@@ -180,6 +181,15 @@ class UsageParser {
     static getInstance(line) {
         return new UsageParser(line);
     }
+
+    /**
+     *
+     * @returns int
+     */
+    getParsedId() {
+        return this.parsedOutput.id;
+    }
+
 }
 
 export default UsageParser;

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "@jest/globals";
 import UsageParser from "../usage_parser.js";
 
-describe("UsageParser", () => {
+describe.skip("UsageParser", () => {
   describe("#parse", () => {
     describe("Given a single string", () => {
       describe("Given an ID that does not end with 4 or 6", () => {
