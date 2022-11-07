@@ -40,6 +40,8 @@ describe("ParsedOutput", () => {
                     mnc: "custom mnc",
                     bytes_used: "custom bytes_used",
                     cellid: "custom cellid",
+                    error: "custom error",
+
                 };
             });
 

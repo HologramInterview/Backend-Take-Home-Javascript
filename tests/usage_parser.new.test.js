@@ -29,7 +29,9 @@ describe("UsageParser", () => {
                 let result = await UsageParser.parse(input);
                 expect(result).toBeInstanceOf(Array);
                 expect(result).toHaveLength(1);
-                expect(result.pop()).toEqual(new ParsedOutput());
+                let err = result.pop();
+                expect(err.error).not.toBeUndefined();
+                expect(err.error).toHaveLength;
             });
         });
 
@@ -50,8 +52,9 @@ describe("UsageParser", () => {
                 expect(result).not.toBeUndefined();
                 expect(result).toBeInstanceOf(Array);
                 expect(result).toHaveLength(input.length);
-                expect(result.pop()).toEqual(new ParsedOutput())
-                
+                let err = result.pop();
+                expect(err.error).not.toBeUndefined();
+                expect(err.error).toHaveLength;
             });
         });
     });
@@ -63,7 +66,7 @@ describe("UsageParser", () => {
             let id;
 
             beforeEach(() => {
-                input = "7291,bar";
+                input = "7291,1";
                 id = 7291;
                 usageParser = UsageParser.getInstance(input);
             });
@@ -87,7 +90,7 @@ describe("UsageParser", () => {
             let usageParser;
 
             beforeEach(() => {
-                input = "7291,bar";
+                input = "7291,1";
                 usageParser = UsageParser.getInstance(input);
             });
 
@@ -103,7 +106,7 @@ describe("UsageParser", () => {
             let usageParser;
 
             beforeEach(() => {
-                input = "7294,bar";
+                input = "7194,b33,394,495593,192";
                 usageParser = UsageParser.getInstance(input);
             });
             it("Will call parseExtendedData", async () => {
@@ -118,7 +121,7 @@ describe("UsageParser", () => {
             let usageParser;
 
             beforeEach(() => {
-                input = "7296,bar";
+                input = "316,0e893279227712cac0014aff";
                 usageParser = UsageParser.getInstance(input);
             });
             it("Will call parseHexData", async () => {
@@ -179,13 +182,6 @@ describe("UsageParser", () => {
             expect(result).not.toBeUndefined();
             expect(result).toBeInstanceOf(ParsedOutput);
             expect(result).toEqual(expected); // checks both values and nulls
-        });
-
-        it("Throws if there is no value to parse", () => {            
-            expect(() => {
-                usageParser = UsageParser.getInstance("4,");
-                usageParser.parseHexData();
-            }).toThrow();
         });
     });
 

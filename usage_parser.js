@@ -59,7 +59,11 @@ class UsageParser {
 
     static convertToInt(value, radix = 10) {
         let parsedValue = parseInt(value, radix);
-        return !isNaN(parsedValue) ? parsedValue : null;
+        if (!isNaN(parsedValue)) {
+            return parsedValue;
+        }
+
+        throw `Value=--${value}-- is not an integer.`;
     }
 
     static convertToIntFromHex(value) {
@@ -162,14 +166,23 @@ class UsageParser {
         if (!Array.isArray(input)) {
             input = [input];
         }
-        return input.map((line) => {
-            try {
-                return UsageParser.getInstance(line).parseLine();
-            } catch (e) {
-                console.log(`Skiping parsing of line='${line}' message='${e}'`);
-                return new ParsedOutput();
-            }
-        });
+
+        return await Promise.all(
+            input.map(async (line) => {
+                let instance;
+                let parsedId;
+                let errorMsg;
+                try {
+                    instance = UsageParser.getInstance(line);
+                    return await instance.parseLine();
+                } catch (e) {
+                    parsedId = instance ? instance.getParsedId() : null;
+                    errorMsg = `Skipping parsing of line='${line}' parsedId=${parsedId} message='${e}'`
+                    console.log(errorMsg);
+                    return new ParsedOutput({ id: parsedId, error: errorMsg });
+                }
+            })
+        );
     }
 
     /**
